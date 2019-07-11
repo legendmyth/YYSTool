@@ -47,12 +47,13 @@ namespace YYSCognexTool
             for (int i = 0; i < list.Count; i++)
             {
                 Cognex.VisionPro.PMAlign.CogPMAlignTool cogPMAlignTool = new Cognex.VisionPro.PMAlign.CogPMAlignTool();
-                cogPMAlignTool.Pattern.TrainImage = new CogImage8Grey(new Bitmap(list[i].image));
+                cogPMAlignTool.Pattern.TrainImage = new CogImage8Grey(new Bitmap(list[i].imageSrc));
                 cogPMAlignTool.Pattern.TrainRegion = null;
                 cogPMAlignTool.Pattern.Origin.TranslationX = cogPMAlignTool.Pattern.TrainImage.Width / 2;
                 cogPMAlignTool.Pattern.Origin.TranslationY = cogPMAlignTool.Pattern.TrainImage.Height / 2;
                 cogPMAlignTool.RunParams.AcceptThreshold = 0.8;
-                cogPMAlignTool.LastRunRecordEnable = CogPMAlignLastRunRecordConstants.ResultsCoordinateAxes | cogPMAlignTool.LastRunRecordEnable | Cognex.VisionPro.PMAlign.CogPMAlignLastRunRecordConstants.ResultsMatchRegion;
+                //cogPMAlignTool.LastRunRecordDiagEnable = cogPMAlignTool.LastRunRecordDiagEnable&CogPMAlignLastRunRecordDiagConstants.ResultsMatchFeatures;
+                cogPMAlignTool.LastRunRecordEnable = CogPMAlignLastRunRecordConstants.ResultsMatchShapeModels|CogPMAlignLastRunRecordConstants.ResultsCoordinateAxes | cogPMAlignTool.LastRunRecordEnable | CogPMAlignLastRunRecordConstants.ResultsMatchRegion;
                 cogPMAlignTool.RunParams.RunAlgorithm = CogPMAlignRunAlgorithmConstants.BestTrained;
                 cogPMAlignTool.RunParams.ZoneScale.Low = 0.8;// = new CogPMAlignZoneScale();
                 cogPMAlignTool.RunParams.ZoneScale.High = 1.2;

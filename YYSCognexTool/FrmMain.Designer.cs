@@ -40,6 +40,7 @@
             this.CDx = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CDy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.COpt = new System.Windows.Forms.DataGridViewImageColumn();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.spcMain)).BeginInit();
             this.spcMain.Panel1.SuspendLayout();
             this.spcMain.SuspendLayout();
@@ -55,6 +56,7 @@
             // 
             // spcMain.Panel1
             // 
+            this.spcMain.Panel1.Controls.Add(this.button1);
             this.spcMain.Panel1.Controls.Add(this.dgvMain);
             this.spcMain.Size = new System.Drawing.Size(1098, 357);
             this.spcMain.SplitterDistance = 576;
@@ -158,6 +160,16 @@
             this.COpt.Name = "COpt";
             this.COpt.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(312, 271);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
@@ -191,6 +203,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CDx;
         private System.Windows.Forms.DataGridViewTextBoxColumn CDy;
         private System.Windows.Forms.DataGridViewImageColumn COpt;
+        private System.Windows.Forms.Button button1;
     }
 }
 
