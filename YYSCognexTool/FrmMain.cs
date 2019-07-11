@@ -51,9 +51,11 @@ namespace YYSCognexTool
                 cogPMAlignTool.Pattern.TrainRegion = null;
                 cogPMAlignTool.Pattern.Origin.TranslationX = cogPMAlignTool.Pattern.TrainImage.Width / 2;
                 cogPMAlignTool.Pattern.Origin.TranslationY = cogPMAlignTool.Pattern.TrainImage.Height / 2;
-                cogPMAlignTool.RunParams.AcceptThreshold = 0.9;
+                cogPMAlignTool.RunParams.AcceptThreshold = 0.8;
                 cogPMAlignTool.LastRunRecordEnable = CogPMAlignLastRunRecordConstants.ResultsCoordinateAxes | cogPMAlignTool.LastRunRecordEnable | Cognex.VisionPro.PMAlign.CogPMAlignLastRunRecordConstants.ResultsMatchRegion;
                 cogPMAlignTool.RunParams.RunAlgorithm = CogPMAlignRunAlgorithmConstants.BestTrained;
+                cogPMAlignTool.RunParams.ZoneScale.Low = 0.8;// = new CogPMAlignZoneScale();
+                cogPMAlignTool.RunParams.ZoneScale.High = 1.2;
                 cogPMAlignTool.Pattern.Train();
                 cogPMAlignTool.Ran += new EventHandler(cogPMAlignTool_Ran);
                 this.toolList.Add(cogPMAlignTool);
