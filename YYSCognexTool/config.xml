@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<list>
+  <pmat name="kaishi" text="开始" image="1.bmp" enable="0" _dx="-10" _dy="10" dx="10" dy="10"></pmat>
+  <pmat name="kaishi" text="测试" image="2.bmp" enable="0" _dx="-10" _dy="10" dx="10" dy="10"></pmat>
+  <pmat name="kaishi" text="测试" image="4.bmp" enable="0" _dx="-10" _dy="10" dx="10" dy="10"></pmat>
+</list>
