@@ -5,20 +5,18 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Cognex.VisionPro.ToolBlock;
-using Cognex.VisionPro;
-using Cognex.VisionPro.PMAlign;
 using System.Data;
 using System.Threading;
 using System.Runtime.InteropServices;
+using OpenCvSharp;
+using OpenCvSharp.CPlusPlus;
 
-namespace YYSCognexTool
+namespace YYSOpenCVTool
 {
     public partial class FrmMain : Form
     {
         List<Ptma> list = new List<Ptma>();
-        List<CogPMAlignTool> toolList = new List<CogPMAlignTool>();
-        CogToolDisplay cogToolDisplay = new CogToolDisplay();
+        List<TrainedTemplate> toolList = new List<TrainedTemplate>();
         public FrmMain()
         {
             InitializeComponent();
@@ -31,25 +29,23 @@ namespace YYSCognexTool
 
         private void FrmMain_Shown(object sender, EventArgs e)
         {
-            cogToolDisplay.Dock = DockStyle.Fill;
-            this.spcMain.Panel2.Controls.Add(cogToolDisplay);
             this.list = Ptma.LoadFromPath("config.xml");
             for (int i = 0; i < list.Count; i++)
             {
-                Cognex.VisionPro.PMAlign.CogPMAlignTool cogPMAlignTool = new Cognex.VisionPro.PMAlign.CogPMAlignTool();
-                cogPMAlignTool.Pattern.TrainImage = new CogImage8Grey(new Bitmap(list[i].imageSrc));
-                cogPMAlignTool.Pattern.TrainRegion = null;
-                cogPMAlignTool.Pattern.Origin.TranslationX = cogPMAlignTool.Pattern.TrainImage.Width / 2;
-                cogPMAlignTool.Pattern.Origin.TranslationY = cogPMAlignTool.Pattern.TrainImage.Height / 2;
-                cogPMAlignTool.RunParams.AcceptThreshold = 0.8;
-                //cogPMAlignTool.LastRunRecordDiagEnable = cogPMAlignTool.LastRunRecordDiagEnable&CogPMAlignLastRunRecordDiagConstants.ResultsMatchFeatures;
-                cogPMAlignTool.LastRunRecordEnable = CogPMAlignLastRunRecordConstants.ResultsMatchShapeModels|CogPMAlignLastRunRecordConstants.ResultsCoordinateAxes | cogPMAlignTool.LastRunRecordEnable | CogPMAlignLastRunRecordConstants.ResultsMatchRegion;
-                cogPMAlignTool.RunParams.RunAlgorithm = CogPMAlignRunAlgorithmConstants.BestTrained;
-                cogPMAlignTool.RunParams.ZoneScale.Low = 0.5;// = new CogPMAlignZoneScale();
-                cogPMAlignTool.RunParams.ZoneScale.High = 2;
-                cogPMAlignTool.Pattern.Train();
-                cogPMAlignTool.Ran += new EventHandler(cogPMAlignTool_Ran);
-                this.toolList.Add(cogPMAlignTool);
+                TrainedTemplate trainedTemplate = new TrainedTemplate();
+                trainedTemplate.templateImage = Cv2.ImRead(list[i].imageSrc, OpenCvSharp.LoadMode.Color);
+
+                SURF featureDetector = new SURF();
+                //获取模板图的特征点
+                KeyPoint[] templateKeyPoints = featureDetector.Detect(trainedTemplate.templateImage);
+                //提取模板图的特征点
+                Mat templateDescriptors = new Mat(trainedTemplate.templateImage.Rows, trainedTemplate.templateImage.Cols, trainedTemplate.templateImage.Type());
+                SURF descriptorExtractor = new SURF();
+                descriptorExtractor.Compute(trainedTemplate.templateImage, ref templateKeyPoints, templateDescriptors);
+                trainedTemplate.templateDescriptors = templateDescriptors;
+                trainedTemplate.templateKeyPoints = templateKeyPoints;
+                this.toolList.Add(trainedTemplate);
+
             }
             this.dgvMain.DataSource = this.list;
 
@@ -132,8 +128,6 @@ namespace YYSCognexTool
                 if (start)
                 {
                     IntPtr hadle = FindWindow(null, "阴阳师-网易游戏");
-                    //Image image=this.CreateGraphics().co
-                     //Form.FromHandle(hadle).CreateGraphics().
                     if(hadle==null)
                     {
                         break;
@@ -148,18 +142,20 @@ namespace YYSCognexTool
                     Graphics g = Graphics.FromImage(catchBmp);
                     // 把屏幕图片拷贝到我们创建的空白图片 CatchBmp中
                     //g.CopyFromScreen(rect.Left,rect.Top,rect.Right,rect.Bottom,)
-                    g.CopyFromScreen(new Point(rect.Left,rect.Top), new Point(0,0), new Size(rect.Right - rect.Left, rect.Bottom - rect.Top));
+                    g.CopyFromScreen(new System.Drawing.Point(rect.Left,rect.Top), new System.Drawing.Point(0,0), new System.Drawing.Size(rect.Right - rect.Left, rect.Bottom - rect.Top));
                     for (int i = 0; i < toolList.Count; i++)
                     {
                         if (list[i].enable == 1)
                         {
-                            toolList[i].InputImage = new CogImage8Grey(catchBmp);
-                            toolList[i].Run();
-                            if(toolList[i].Results.Count>0)
+                            MatchResult result = MatchTool.Match(catchBmp, toolList[i]);
+                            //this.pnlResult.Invoke(new MethodInvoker(delegate { this.pnlResult.CreateGraphics().DrawImage(catchBmp, 20, 20);   }));
+                            if (result!=null)
                             {
-                                this.cogToolDisplay.Invoke(new MethodInvoker(delegate { cogToolDisplay.Tool = toolList[i]; }));
-                                int x = (int)toolList[i].Results[0].GetPose().TranslationX + rect.Left;
-                                int y = (int)toolList[i].Results[0].GetPose().TranslationY + rect.Top;
+
+                                //this.pnlResult.Invoke(new MethodInvoker(delegate { this.pnlResult.CreateGraphics().DrawRectangle(Pens.Green, result.left, result.top, result.right - result.left, result.bottom - result.top); }));
+                                int x = result.left + toolList[i].templateImage.Width / 2 + rect.Left;
+                                int y = result.top + toolList[i].templateImage.Height / 2 + rect.Top;
+
                                 Click(x, y, (int)this.dgvMain.Rows[i].Cells["C_DX"].Value, (int)this.dgvMain.Rows[i].Cells["CDx"].Value, (int)this.dgvMain.Rows[i].Cells["C_DY"].Value, (int)this.dgvMain.Rows[i].Cells["CDy"].Value);
                                 break;
                             }
@@ -188,7 +184,7 @@ namespace YYSCognexTool
         }
 
         [DllImport("User32.dll")]
-        public extern static bool GetCursorPos(ref Point pot);
+        public extern static bool GetCursorPos(ref System.Drawing.Point pot);
 
         [DllImport("User32.dll")]
         public extern static void SetCursorPos(int x, int y);

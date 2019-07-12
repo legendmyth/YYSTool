@@ -1,4 +1,4 @@
-﻿namespace YYSCognexTool
+﻿namespace YYSOpenCVTool
 {
     partial class FrmMain
     {
@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.spcMain = new System.Windows.Forms.SplitContainer();
+            this.btnStart = new System.Windows.Forms.Button();
             this.dgvMain = new System.Windows.Forms.DataGridView();
             this.CName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CText = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -40,9 +41,10 @@
             this.CDx = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CDy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.COpt = new System.Windows.Forms.DataGridViewImageColumn();
-            this.btnStart = new System.Windows.Forms.Button();
+            this.pnlResult = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.spcMain)).BeginInit();
             this.spcMain.Panel1.SuspendLayout();
+            this.spcMain.Panel2.SuspendLayout();
             this.spcMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMain)).BeginInit();
             this.SuspendLayout();
@@ -58,10 +60,24 @@
             // 
             this.spcMain.Panel1.Controls.Add(this.btnStart);
             this.spcMain.Panel1.Controls.Add(this.dgvMain);
+            // 
+            // spcMain.Panel2
+            // 
+            this.spcMain.Panel2.Controls.Add(this.pnlResult);
             this.spcMain.Size = new System.Drawing.Size(1098, 357);
             this.spcMain.SplitterDistance = 576;
             this.spcMain.SplitterWidth = 7;
             this.spcMain.TabIndex = 3;
+            // 
+            // btnStart
+            // 
+            this.btnStart.Location = new System.Drawing.Point(50, 276);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(139, 44);
+            this.btnStart.TabIndex = 1;
+            this.btnStart.Text = "开始";
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // dgvMain
             // 
@@ -160,15 +176,13 @@
             this.COpt.Name = "COpt";
             this.COpt.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
-            // btnStart
+            // pnlResult
             // 
-            this.btnStart.Location = new System.Drawing.Point(50, 276);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(139, 44);
-            this.btnStart.TabIndex = 1;
-            this.btnStart.Text = "开始";
-            this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            this.pnlResult.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlResult.Location = new System.Drawing.Point(0, 0);
+            this.pnlResult.Name = "pnlResult";
+            this.pnlResult.Size = new System.Drawing.Size(515, 357);
+            this.pnlResult.TabIndex = 0;
             // 
             // FrmMain
             // 
@@ -182,6 +196,7 @@
             this.Text = "测试";
             this.Shown += new System.EventHandler(this.FrmMain_Shown);
             this.spcMain.Panel1.ResumeLayout(false);
+            this.spcMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.spcMain)).EndInit();
             this.spcMain.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvMain)).EndInit();
@@ -204,6 +219,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CDy;
         private System.Windows.Forms.DataGridViewImageColumn COpt;
         private System.Windows.Forms.Button btnStart;
+        private System.Windows.Forms.Panel pnlResult;
     }
 }
 
