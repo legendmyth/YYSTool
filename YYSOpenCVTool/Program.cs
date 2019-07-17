@@ -22,8 +22,7 @@ namespace YYSOpenCVTool
             ////读取图片文件
             Mat templateImage = Cv2.ImRead(templateFilePath, OpenCvSharp.LoadMode.Color);
             Mat originalImage = Cv2.ImRead(originalFilePath, OpenCvSharp.LoadMode.Color);
-            //Cv2.CvtColor()
-            //ImageRecognition imageRecognition = new ImageRecognition();
+
             ImageRecognition.matchImage(templateImage, originalImage, 0.6f);
 
             //Console.WriteLine("匹配的像素点总数：" + imageRecognition.getMatchesPointCount());

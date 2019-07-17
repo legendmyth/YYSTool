@@ -30,11 +30,11 @@ namespace YYSOpenCVTool
 
 
                 //开始匹配
-                DescriptorMatcher descriptorMatcher = DescriptorMatcher.Create("FlannBased");//或者使用
-                                                                                             /**
-                                                                                              * knnMatch方法的作用就是在给定特征描述集合中寻找最佳匹配
-                                                                                              * 使用KNN-matching算法，令K=2，则每个match得到两个最接近的descriptor，然后计算最接近距离和次接近距离之间的比值，当比值大于既定值时，才作为最终match。
-                                                                                              */
+                DescriptorMatcher descriptorMatcher = DescriptorMatcher.Create("FlannBased");
+                /**
+                 * knnMatch方法的作用就是在给定特征描述集合中寻找最佳匹配
+                 * 使用KNN-matching算法，令K=2，则每个match得到两个最接近的descriptor，然后计算最接近距离和次接近距离之间的比值，当比值大于既定值时，才作为最终match。
+                 */
                 DMatch[][] matches = descriptorMatcher.KnnMatch(trainedTemplate.templateDescriptors, originalDescriptors, 2);
                 List<DMatch> goodMatchesList = new List<DMatch>();
                 foreach (DMatch[] match in matches)
@@ -126,7 +126,7 @@ namespace YYSOpenCVTool
                 using (s2_ms = new MemoryStream())
                 {
                     bitmap.Save(s2_ms, ImageFormat.Bmp);
-                    source = Mat.FromStream(s2_ms,LoadMode.AnyColor);
+                    source = Mat.FromStream(s2_ms, LoadMode.AnyColor);
                 }
             }
             catch (Exception ex)
